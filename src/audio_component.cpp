@@ -58,8 +58,9 @@ public:
 	}
 
 private:
-	[[unused]] switchboard const *sb;
+	[[unused]] const std::shared_ptr<switchboard> sb;
 	pose_prediction *pp;
+
 	start_end_logger* logger;
 	ILLIXR_AUDIO::ABAudio* decoder, *encoder;
 	std::chrono::time_point<std::chrono::system_clock> sync;
