@@ -59,7 +59,7 @@ public:
 
 private:
 	[[unused]] const std::shared_ptr<switchboard> sb;
-	pose_prediction *pp;
+	const std::shared_ptr<const pose_prediction> pp;
 
 	start_end_logger* logger;
 	ILLIXR_AUDIO::ABAudio* decoder, *encoder;
