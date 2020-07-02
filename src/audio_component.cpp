@@ -8,6 +8,7 @@
 #include "common/data_format.hpp"
 #include "common/phonebook.hpp"
 #include "common/logger.hpp"
+#include "common/pose_prediction.hpp"
 
 #include <audio.h>
 
@@ -18,10 +19,9 @@ using namespace ILLIXR;
 class audio_component : public threadloop
 {
 public:
-	audio_component(std::string name_, phonebook *pb_)
+	audio_component(phonebook *pb)
 		: threadloop{name_, pb_}
-		, sb{pb->lookup_impl<switchboard>()}
-		, _m_pose{sb->subscribe_latest<pose_type>("slow_pose")}
+		, pp{pb->lookup_impl<pose_prediction>()}
 		, decoder{"", ILLIXR_AUDIO::ABAudio::ProcessType::DECODE}
 		, encoder{"", ILLIXR_AUDIO::ABAudio::ProcessType::ENCODE}
 		, last_iteration{std::chrono::high_resolution_clock::now()}
@@ -40,14 +40,14 @@ public:
 	}
 
 	virtual void _p_one_iteration() override {
-		[[maybe_unused]] auto most_recent_pose = _m_pose->get_latest_ro();
-		encoder.processBlock();
-		decoder.processBlock();
+		logger->log_start(std::chrono::high_resolution_clock::now());
+		[[maybe unused]] auto most_recent_pose = pp->get_fast_pose();
+		encoder->processBlock();
+		decoder->processBlock();
+		logger->log_end(std::chrono::high_resolution_clock::now());
 	}
 
 private:
-	const std::shared_ptr<switchboard> sb;
-	std::unique_ptr<reader_latest<pose_type>> _m_pose;
 	ILLIXR_AUDIO::ABAudio decoder, encoder;
 	std::chrono::high_resolution_clock::time_point last_iteration;
 	start_end_logger logger;
