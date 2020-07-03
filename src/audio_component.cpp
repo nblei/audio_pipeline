@@ -19,7 +19,7 @@ using namespace ILLIXR;
 class audio_component : public threadloop
 {
 public:
-	audio_component(phonebook *pb)
+	audio_component(std::string name_, phonebook *pb_)
 		: threadloop{name_, pb_}
 		, pp{pb->lookup_impl<pose_prediction>()}
 		, decoder{"", ILLIXR_AUDIO::ABAudio::ProcessType::DECODE}
@@ -40,14 +40,15 @@ public:
 	}
 
 	virtual void _p_one_iteration() override {
-		logger->log_start(std::chrono::high_resolution_clock::now());
+		logger.log_start(std::chrono::high_resolution_clock::now());
 		[[maybe unused]] auto most_recent_pose = pp->get_fast_pose();
-		encoder->processBlock();
-		decoder->processBlock();
-		logger->log_end(std::chrono::high_resolution_clock::now());
+		encoder.processBlock();
+		decoder.processBlock();
+		logger.log_end(std::chrono::high_resolution_clock::now());
 	}
 
 private:
+	std::shared_ptr<const pose_prediction> pp;
 	ILLIXR_AUDIO::ABAudio decoder, encoder;
 	std::chrono::high_resolution_clock::time_point last_iteration;
 	start_end_logger logger;
