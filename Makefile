@@ -44,10 +44,10 @@ solo.opt: $(OBJFILES) main.o libspatialaudio/build/Release/lib/libspatialaudio.a
 	$(LD) $(OPT_FLAGS) $^ -o $@ $(LD_LIBS)
 
 %.o: src/%.cpp libspatialaudio/build
-	$(CXX) $(CXXFLAGS) $< -c -o $@
+	$(CXX) $(OPT_FLAGS) $(CXXFLAGS) $< -c -o $@
 
 %.o: src/%.c libspatialaudio/build
-	$(CC) $(CFLAGS) $< -c -o $@
+	$(CC) $(OPT_FLAGS) $(CFLAGS) $< -c -o $@
 
 libspatialaudio/build/Debug/lib/libspatialaudio.a:
 	mkdir -p libspatialaudio/build/Debug
@@ -62,9 +62,6 @@ libspatialaudio/build/Release/lib/libspatialaudio.a:
 	cmake -DCMAKE_INSTALL_PREFIX=Release -DCMAKE_BUILD_TYPE=Release ..
 	$(MAKE) -C libspatialaudio/build
 	$(MAKE) -C libspatialaudio/build install
-
-libspatialaudio/build:
-
 
 clean:
 	rm -rf audio *.o *.so solo.dbg solo.opt
