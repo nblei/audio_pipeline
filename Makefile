@@ -49,16 +49,22 @@ solo.opt: $(OBJFILES) main.o libspatialaudio/build/Release/lib/libspatialaudio.a
 %.o: src/%.c libspatialaudio/build
 	$(CC) $(CFLAGS) $< -c -o $@
 
-libspatialaudio/build/Debug/lib/libspatialaudio.a: libspatialaudio/build
-libspatialaudio/build/Release/lib/libspatialaudio.a: libspatialaudio/build
-
-libspatialaudio/build:
-	mkdir -p libspatialaudio/build/$(LIBSPATIALAUDIO_BUILD_TYPE)
+libspatialaudio/build/Debug/lib/libspatialaudio.a:
+	mkdir -p libspatialaudio/build/Debug
 	cd libspatialaudio/build; \
-	cmake -DCMAKE_INSTALL_PREFIX=$(LIBSPATIALAUDIO_BUILD_TYPE) \
-	      -DCMAKE_BUILD_TYPE=$(LIBSPATIALAUDIO_BUILD_TYPE) ..
+	cmake -DCMAKE_INSTALL_PREFIX=Debug -DCMAKE_BUILD_TYPE=Debug ..
 	$(MAKE) -C libspatialaudio/build
 	$(MAKE) -C libspatialaudio/build install
+
+libspatialaudio/build/Release/lib/libspatialaudio.a:
+	mkdir -p libspatialaudio/build/Release
+	cd libspatialaudio/build; \
+	cmake -DCMAKE_INSTALL_PREFIX=Release -DCMAKE_BUILD_TYPE=Release ..
+	$(MAKE) -C libspatialaudio/build
+	$(MAKE) -C libspatialaudio/build install
+
+libspatialaudio/build:
+
 
 clean:
 	rm -rf audio *.o *.so solo.dbg solo.opt
