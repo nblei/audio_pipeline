@@ -9,6 +9,7 @@ LD_LIBS=-lpthread -pthread
 LD_LIBS=-lpthread -pthread
 DBG_FLAGS=-g -I./libspatialaudio/build/Debug/include
 OPT_FLAGS=-O3 -I./libspatialaudio/build/Release/include
+HPP_FILES ?= $(shell find -L . -name '*.hpp')
 
 SRCFILES=audio.cpp sound.cpp
 OBJFILES=$(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SRCFILES)))
@@ -21,14 +22,14 @@ OPT_SO_NAME=plugin.opt.so
 $(DBG_SO_NAME): CFLAGS += $(DBG_FLAGS)
 $(DBG_SO_NAME): CXXFLAGS += $(DBG_FLAGS)
 $(DBG_SO_NAME): LIBSPATIALAUDIO_BUILD_TYPE=Debug
-$(DBG_SO_NAME): $(OBJFILES) audio_component.o libspatialaudio/build/Debug/lib/libspatialaudio.a
-	$(LD) $(CXXFLAGS) $(DBG_FLAGS) $^ -shared -o $@ $(LD_LIBS)
+$(DBG_SO_NAME): $(OBJFILES) audio_component.o libspatialaudio/build/Debug/lib/libspatialaudio.a $(HPP_FILES)
+	$(LD) $(CXXFLAGS) $(DBG_FLAGS) $(OBJFILES) audio_component.o libspatialaudio/build/Debug/lib/libspatialaudio.a -shared -o $@ $(LD_LIBS)
 
 $(OPT_SO_NAME): CFLAGS += $(OPT_FLAGS)
 $(OPT_SO_NAME): CXXFLAGS += $(OPT_FLAGS)
 $(OPT_SO_NAME): LIBSPATIALAUDIO_BUILD_TYPE=Release
-$(OPT_SO_NAME): $(OBJFILES) audio_component.o libspatialaudio/build/Release/lib/libspatialaudio.a
-	$(LD) $(CXXFLAGS) $(OPT_FLAGS) $^ -shared -o $@ $(LD_LIBS)
+$(OPT_SO_NAME): $(OBJFILES) audio_component.o libspatialaudio/build/Release/lib/libspatialaudio.a $(HPP_FILES)
+	$(LD) $(CXXFLAGS) $(OPT_FLAGS) $(OBJFILES) audio_component.o libspatialaudio/build/Release/lib/libspatialaudio.a -shared -o $@ $(LD_LIBS)
 
 solo.dbg: CFLAGS += $(DBG_FLAGS)
 solo.dbg: CXXFLAGS += $(DBG_FLAGS)
