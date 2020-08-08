@@ -24,7 +24,7 @@ $(DBG_SO_NAME): CFLAGS += $(DBG_FLAGS)
 $(DBG_SO_NAME): CXXFLAGS += $(DBG_FLAGS)
 $(DBG_SO_NAME): LIBSPATIALAUDIO_BUILD_TYPE=Debug
 $(DBG_SO_NAME): $(DBGOBJFILES) audio_component.dbg.o libspatialaudio/build/Debug/lib/libspatialaudio.a $(HPP_FILES)
-	$(LD) $(CXXFLAGS) $(DBG_FLAGS) $(ODBGBJFILES) audio_component.dbg.o libspatialaudio/build/Debug/lib/libspatialaudio.a -shared -o $@ $(LD_LIBS)
+	$(LD) $(CXXFLAGS) $(DBG_FLAGS) $(DBGOBJFILES) audio_component.dbg.o libspatialaudio/build/Debug/lib/libspatialaudio.a -shared -o $@ $(LD_LIBS)
 
 $(OPT_SO_NAME): CFLAGS += $(OPT_FLAGS)
 $(OPT_SO_NAME): CXXFLAGS += $(OPT_FLAGS)
