@@ -22,11 +22,9 @@ public:
 		: threadloop{name_, pb_}
 		, sb{pb->lookup_impl<switchboard>()}
 		, _m_pose{sb->subscribe_latest<pose_type>("slow_pose")}
-		, decoder{"", ILLIXR_AUDIO::ABAudio::ProcessType::DECODE}
 		, encoder{"", ILLIXR_AUDIO::ABAudio::ProcessType::ENCODE}
 		, last_iteration{std::chrono::high_resolution_clock::now()}
 	{
-		decoder.loadSource();
 		encoder.loadSource();
 	}
 
@@ -42,13 +40,12 @@ public:
 	virtual void _p_one_iteration() override {
 		[[maybe_unused]] auto most_recent_pose = _m_pose->get_latest_ro();
 		encoder.processBlock();
-		decoder.processBlock();
 	}
 
 private:
 	const std::shared_ptr<switchboard> sb;
 	std::unique_ptr<reader_latest<pose_type>> _m_pose;
-	ILLIXR_AUDIO::ABAudio decoder, encoder;
+	ILLIXR_AUDIO::ABAudio encoder;
 	std::chrono::high_resolution_clock::time_point last_iteration;
 };
 
