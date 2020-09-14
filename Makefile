@@ -45,14 +45,14 @@ solo.opt.exe: $(OBJFILES) main.o libspatialaudio/build/Release/lib/libspatialaud
 libspatialaudio/build/Debug/lib/libspatialaudio.a:
 	mkdir -p libspatialaudio/build/Debug
 	cd libspatialaudio/build; \
-	cmake -DCMAKE_INSTALL_PREFIX=Debug -DCMAKE_BUILD_TYPE=Debug ..
+	cmake -DCMAKE_INSTALL_PREFIX=Debug   -DCMAKE_BUILD_TYPE=Debug   -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) ..
 	$(MAKE) -C libspatialaudio/build
 	$(MAKE) -C libspatialaudio/build install
 
 libspatialaudio/build/Release/lib/libspatialaudio.a:
 	mkdir -p libspatialaudio/build/Release
 	cd libspatialaudio/build; \
-	cmake -DCMAKE_INSTALL_PREFIX=Release -DCMAKE_BUILD_TYPE=Release ..
+	cmake -DCMAKE_INSTALL_PREFIX=Release -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) ..
 	$(MAKE) -C libspatialaudio/build
 	$(MAKE) -C libspatialaudio/build install
 
