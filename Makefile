@@ -3,14 +3,12 @@ BINDIR=./bin/
 CC=clang
 CXX=clang++-10
 LD=clang++-10
-CFLAGS=-Wall -fPIC -I./include
-CXXFLAGS=-std=c++17 -Wall -fPIC -I./include -Wno-overloaded-virtual
-LD_LIBS=-lpthread -pthread
+CFLAGS=-Wall -Wextra -fPIC -I./include
+CXXFLAGS=-std=c++17 -Wall -Wextra -fPIC -I./include -Wno-overloaded-virtual
 LD_LIBS=-lpthread -pthread
 DBG_FLAGS=-Og -I./libspatialaudio/build/Debug/include -g
 OPT_FLAGS=-O3 -I./libspatialaudio/build/Release/include -DNDEBUG
-HPP_FILES := $(shell find -L . -name '*.hpp')
-HPP_FILES := $(patsubst ./%,%,$(HPP_FILES))
+HPP_FILES := $(patsubst ./%,%,$(shell find -L . -name '*.hpp'))
 
 SRCFILES=audio.cpp sound.cpp
 DBGOBJFILES=$(patsubst %.c,%.dbg.o,$(patsubst %.cpp,%.dbg.o,$(SRCFILES)))
