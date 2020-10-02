@@ -4,7 +4,7 @@
 #include <thread>
 
 #include "common/threadloop.hpp"
-#include "common/switchboard.hpp"
+#include "common/pose_prediction.hpp"
 #include "common/data_format.hpp"
 #include "common/phonebook.hpp"
 #include "common/logger.hpp"
@@ -21,7 +21,7 @@ public:
 	audio_xcoding(phonebook *pb_, bool encoding)
 		: threadloop{encoding ? "audio_encoding" : "audio_decoding", pb_}
 		, sb{pb->lookup_impl<switchboard>()}
-		, _m_pose{sb->subscribe_latest<pose_type>("slow_pose")}
+		, pp{pb->lookup_impl<pose_prediction>()}
 		, xcoder{"", encoding ? ILLIXR_AUDIO::ABAudio::ProcessType::ENCODE : ILLIXR_AUDIO::ABAudio::ProcessType::DECODE}
 		, last_iteration{std::chrono::high_resolution_clock::now()}
 		, encoding_{encoding}
@@ -37,14 +37,14 @@ public:
 
 	virtual void _p_one_iteration() override {
 		if (!encoding_) {
-			[[maybe_unused]] auto most_recent_pose = _m_pose->get_latest_ro();
+			[[maybe_unused]] auto most_recent_pose = pp->get_fast_pose().pose;
 		}
 		xcoder.processBlock();
 	}
 
 private:
 	const std::shared_ptr<switchboard> sb;
-	std::unique_ptr<reader_latest<pose_type>> _m_pose;
+	const std::shared_ptr<pose_prediction> pp;
 	ILLIXR_AUDIO::ABAudio xcoder;
 	std::chrono::high_resolution_clock::time_point last_iteration;
 	bool encoding_;
